@@ -1,5 +1,29 @@
+$squareBackground: #fff;
+$squareBorder: 0.25rem solid #ddd;
+$squareSize: 4rem;
+
+$lineColor: #007bff;
+
 .square {
-  width: 1rem;
-  height: 1rem;
-  border: 1rem solid blue;
+  width: $squareSize;
+  height: $squareSize;
+  background-color: $squareBackground;
+  border: $squareBorder;
+  border-radius: 7%;
+  position: relative;
+}
+
+.square__line-svg {
+  stroke: $lineColor;
+  opacity: 0.3;
+  stroke-width: 8%;
+  position: absolute;
+  z-index: 10;
+  top: calc(-50% - 0.875rem);
+  left: calc(-50% - 0.875rem);
+  width: calc(200% + 1.75rem);
+  height: calc(200% + 1.75rem);
+  stroke-linecap: round;
+  overflow: visible;
+  pointer-events: none;
 }
