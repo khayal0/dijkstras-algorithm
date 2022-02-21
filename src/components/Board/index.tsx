@@ -1,54 +1,80 @@
-import { useMemo, useState } from "react";
+// import { useMemo, useState } from "react";
 import { BOARD } from "../../enums";
 import Square from "../Square";
 
 import "./index.scss";
 
 function Board() {
-  const initialPaths = useMemo(() => new Array(15).fill(null), []);
-  const [paths, setPaths] = useState([0, ...initialPaths]);
+  // const initialPaths = useMemo(() => new Array(15).fill(null), []);
+  // const [paths, setPaths] = useState([0, ...initialPaths]);
 
-  const nodes = [
-    [0],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
-    [Infinity],
+  const nodes: any = [
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
   ];
 
-  for (let [index, node] of paths.entries()) {
-    // find out edges of a node
-    // left
-    if ((index + 1) % BOARD.WITH !== 0) {
-      // has right edge
-      console.log("HAS RIGHT");
+  const paths: any = { 0: { pathFrom: null, weight: 0 } };
+
+  const visitedNodes: any = [];
+
+  const addNeighbors = () => {
+    nodes.forEach((node: any, index: number) => {
+      const rightNode = index + 1;
+      const leftNode = index - 1;
+      const bottomNode = index + BOARD.WITH;
+      const upperNode = index - BOARD.WITH;
+
+      if (rightNode % BOARD.WITH !== 0) {
+        node.neighbors.push(rightNode);
+      }
+      if (index % BOARD.WITH !== 0) {
+        node.neighbors.push(leftNode);
+      }
+      if (bottomNode < 12) {
+        node.neighbors.push(bottomNode);
+      }
+      if (index >= BOARD.WITH) {
+        node.neighbors.push(upperNode);
+      }
+    });
+  };
+
+  addNeighbors();
+
+  nodes.forEach((node: any, currentNodeIndex: any) => {
+    if (visitedNodes.indexOf(currentNodeIndex) > -1) {
+      return;
     }
-    if (index % BOARD.WITH !== 0) {
-      // has left edge
-      console.log("HAS LEFT");
-    }
-    if (BOARD.WITH + index < 12) {
-      // has down edge
-      console.log("HAS DOWN");
-    }
-    if (index >= BOARD.WITH) {
-      // has upper egde
-      console.log("HAS UPPER EDGE");
-    }
-    console.warn("NEXT FROM", index, index + 1);
-  }
+    visitedNodes.push(currentNodeIndex);
+
+    node.neighbors.forEach((neighbor: any) => {
+      // console.log(paths[neighbor]);
+      if (paths[neighbor] === undefined) {
+        //TODO: if defined but less than
+        // 1 {weight:1, path : currentIndex}
+        paths[neighbor] = { weight: 1, path: currentNodeIndex };
+      }
+    });
+  });
+
+  console.log("== ALL NODES ==>", nodes);
+  console.log("== ALL PATHS ==>", paths);
+  console.log("== VISITED NODES ==>", visitedNodes);
 
   return (
     <div className="board">
-      {paths.map(path => (
-        <Square />
+      {nodes.map((_node: any, index: any) => (
+        <Square index={index} key={index} />
       ))}
     </div>
   );
