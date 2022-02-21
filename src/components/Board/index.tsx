@@ -34,17 +34,39 @@ function Board() {
       const bottomNode = index + BOARD.WITH;
       const upperNode = index - BOARD.WITH;
 
+      const upperRightNode = upperNode + 1;
+      const upperLeftNode = upperNode - 1;
+      const bottomRightNode = bottomNode + 1;
+      const bottomLeftNode = bottomNode - 1;
+
+      const isOnRight = (index + 1) % BOARD.WITH === 0;
+      const isOnTop = index < BOARD.WITH;
+      const isOnLeftSide = index % BOARD.WITH === 0;
+      const isOnBottom = index >= BOARD.NODES_COUNT - BOARD.WITH;
+
       if (rightNode % BOARD.WITH !== 0) {
         node.neighbors.push(rightNode);
       }
-      if (index % BOARD.WITH !== 0) {
+      if (!isOnLeftSide) {
         node.neighbors.push(leftNode);
       }
-      if (bottomNode < 12) {
+      if (!isOnBottom) {
         node.neighbors.push(bottomNode);
       }
-      if (index >= BOARD.WITH) {
+      if (!isOnTop) {
         node.neighbors.push(upperNode);
+      }
+      if (!isOnLeftSide && !isOnTop) {
+        node.neighbors.push(upperLeftNode);
+      }
+      if (index >= BOARD.WITH) {
+        node.neighbors.push(upperRightNode);
+      }
+      if (!isOnLeftSide && !isOnBottom) {
+        node.neighbors.push(bottomLeftNode);
+      }
+      if (!isOnRight && !isOnBottom) {
+        node.neighbors.push(bottomRightNode);
       }
     });
   };
