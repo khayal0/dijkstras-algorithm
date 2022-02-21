@@ -25,7 +25,7 @@ function Board() {
 
   const paths: any = { 0: { pathFrom: null, weight: 0 } };
 
-  const visitedNodes: any = [];
+  const visitedNodes: any = [6];
 
   const addNeighbors = () => {
     nodes.forEach((node: any, index: number) => {
@@ -71,23 +71,23 @@ function Board() {
     });
   };
 
-  addNeighbors();
-
-  nodes.forEach((node: any, currentNodeIndex: any) => {
-    if (visitedNodes.indexOf(currentNodeIndex) > -1) {
-      return;
-    }
-    visitedNodes.push(currentNodeIndex);
-
-    node.neighbors.forEach((neighbor: any) => {
-      // console.log(paths[neighbor]);
-      if (paths[neighbor] === undefined) {
-        //TODO: if defined but less than
-        // 1 {weight:1, path : currentIndex}
-        paths[neighbor] = { weight: 1, path: currentNodeIndex };
+  const calculateShortestPath = () => {
+    nodes.forEach((node: any, currentNodeIndex: any) => {
+      if (visitedNodes.indexOf(currentNodeIndex) > -1) {
+        return;
       }
+      visitedNodes.push(currentNodeIndex);
+
+      node.neighbors.forEach((neighbor: any) => {
+        if (paths[neighbor] === undefined) {
+          paths[neighbor] = { weight: 1, path: currentNodeIndex };
+        }
+      });
     });
-  });
+  };
+
+  addNeighbors();
+  calculateShortestPath();
 
   console.log("== ALL NODES ==>", nodes);
   console.log("== ALL PATHS ==>", paths);
