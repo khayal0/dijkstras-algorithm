@@ -114,8 +114,12 @@ function Board() {
 
   return (
     <div className="board">
-      {nodes.map((node: any, index: any) => (
-        <Square index={index} key={index} node={node} />
+      {nodes.map((_node: any, index: any) => (
+        <Square
+          index={index}
+          key={index}
+          shortestPathArray={shortestPathArray}
+        />
       ))}
     </div>
   );

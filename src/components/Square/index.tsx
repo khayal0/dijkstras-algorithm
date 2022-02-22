@@ -1,9 +1,22 @@
+import { useEffect, useState } from "react";
 import { BOARD } from "../../enums";
 
 import "./index.scss";
 
-function Square({ index, _node }: any) {
-  const lineDirection = { x: 100, y: 50 };
+function Square({ index, shortestPathArray }: any) {
+  const [lineDirection, setLineDirection] = useState<any>(null);
+
+  useEffect(() => {
+    if (shortestPathArray.indexOf(index) > -1) {
+      const currentNode = index;
+      const currentNodeIdx = shortestPathArray.indexOf(currentNode);
+      const nextNode = shortestPathArray[currentNodeIdx + 1];
+      console.log("current node", currentNode, "index", nextNode);
+      if (nextNode !== undefined) {
+        setLineDirection([currentNode, nextNode]);
+      }
+    }
+  }, [index, shortestPathArray]);
 
   const directions = {
     up: { x: "50%", y: "0" },
@@ -16,9 +29,10 @@ function Square({ index, _node }: any) {
     bottomRight: { x: "100%", y: "100%" },
   };
 
+  console.log(lineDirection);
+
   const getLinePosition = (): any => {
-    const currentSquare = 1;
-    const targetSquare = 5;
+    const [currentSquare, targetSquare] = lineDirection;
 
     return {
       "1": directions.left,
