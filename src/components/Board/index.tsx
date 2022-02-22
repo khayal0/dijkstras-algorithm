@@ -25,7 +25,7 @@ function Board() {
     { neighbors: [] },
   ];
 
-  const paths: any = { 0: { pathFrom: null, weight: 0 } };
+  const paths: any = { 0: { path: null, weight: 0 } };
 
   const visitedNodes: any = [];
 
@@ -90,6 +90,23 @@ function Board() {
 
   addNeighbors();
   calculateShortestPath();
+
+  const shortestPathArray: any = [];
+
+  let nextNode = paths[targetNode].path;
+  shortestPathArray.unshift(nextNode);
+  nextNode = paths[nextNode].path;
+
+  shortestPathArray.unshift(nextNode);
+  nextNode = paths[nextNode].path;
+
+  shortestPathArray.unshift(nextNode);
+  nextNode = paths[nextNode].path;
+
+  if (nextNode === null) shortestPathArray.push(targetNode);
+  console.log(nextNode);
+
+  console.log(" shortestPathArray ", shortestPathArray);
 
   console.log("== ALL NODES ==>", nodes);
   console.log("== ALL PATHS ==>", paths);
