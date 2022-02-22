@@ -4,9 +4,57 @@ import Square from "../Square";
 import "./index.scss";
 
 function Board() {
-  const targetNode = BOARD.NODES_COUNT - 1;
+  const targetNode = 67;
 
   const nodes: any = [
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
@@ -35,7 +83,8 @@ function Board() {
 
   const paths: any = { 0: { path: null, weight: 0 } };
 
-  const visitedNodes: any = [];
+  const blockedNodes = [18, 28, 54, 42];
+  const visitedNodes: number[] = [...blockedNodes];
 
   const addNeighbors = () => {
     nodes.forEach((node: any, index: number) => {
@@ -102,9 +151,12 @@ function Board() {
   const shortestPathArray: any = [];
   let nextNode = paths[targetNode].path;
 
-  while (nextNode !== null) {
+  let counter = 0;
+  while (nextNode !== null && counter < 999) {
     shortestPathArray.unshift(nextNode);
     nextNode = paths[nextNode].path;
+    console.log(nextNode);
+    counter++;
   }
 
   if (nextNode === null) shortestPathArray.push(targetNode);
@@ -116,6 +168,7 @@ function Board() {
           index={index}
           key={index}
           shortestPathArray={shortestPathArray}
+          blocked={blockedNodes.indexOf(index) > -1}
         />
       ))}
     </div>

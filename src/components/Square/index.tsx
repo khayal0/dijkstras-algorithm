@@ -3,7 +3,7 @@ import { BOARD } from "../../enums";
 
 import "./index.scss";
 
-function Square({ index, shortestPathArray }: any) {
+function Square({ index, shortestPathArray, blocked }: any) {
   const [lineDirection, setLineDirection] = useState<any>(null);
 
   useEffect(() => {
@@ -45,7 +45,7 @@ function Square({ index, shortestPathArray }: any) {
   };
 
   return (
-    <div className="square">
+    <div className={`square ${blocked ? "square--blocked" : ""}`}>
       <span>{index}</span>
       {lineDirection !== null && (
         <svg className="square__line-svg">

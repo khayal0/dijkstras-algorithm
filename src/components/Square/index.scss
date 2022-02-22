@@ -11,6 +11,11 @@ $lineColor: #007bff;
   border: $squareBorder;
   border-radius: 7%;
   position: relative;
+  font-family: monospace;
+  font-size: 0.8rem;
+  &--blocked {
+    background: #ee5555;
+  }
 }
 
 .square__line-svg {
