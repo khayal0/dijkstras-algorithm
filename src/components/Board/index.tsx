@@ -4,69 +4,9 @@ import Square from "../Square";
 import "./index.scss";
 
 function Board() {
-  const targetNode = 67;
+  const targetNode = 11;
 
   const nodes: any = [
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
@@ -83,7 +23,7 @@ function Board() {
 
   const paths: any = { 0: { path: null, weight: 0 } };
 
-  const blockedNodes = [18, 28, 54, 42];
+  const blockedNodes = [6, 2];
   const visitedNodes: number[] = [...blockedNodes];
 
   const addNeighbors = () => {
@@ -163,14 +103,26 @@ function Board() {
 
   return (
     <div className="board">
-      {nodes.map((_node: any, index: any) => (
-        <Square
-          index={index}
-          key={index}
-          shortestPathArray={shortestPathArray}
-          blocked={blockedNodes.indexOf(index) > -1}
-        />
-      ))}
+      {nodes.map((_node: any, index: any) => {
+        let nextNode = null;
+        if (shortestPathArray.indexOf(index) > -1) {
+          const currentNode = index;
+          const currentNodeIdx = shortestPathArray.indexOf(currentNode);
+          const nextNodeTemp = shortestPathArray[currentNodeIdx + 1];
+          console.log("current node", currentNode, "index", nextNode);
+          if (nextNodeTemp !== undefined) {
+            nextNode = nextNodeTemp;
+          }
+        }
+        return (
+          <Square
+            index={index}
+            key={index}
+            nextNode={nextNode}
+            blocked={blockedNodes.indexOf(index) > -1}
+          />
+        );
+      })}
     </div>
   );
 }

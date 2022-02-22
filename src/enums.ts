@@ -1,4 +1,4 @@
 export enum BOARD {
-  WITH = 12,
-  NODES_COUNT = 72,
+  WITH = 4,
+  NODES_COUNT = 12,
 }

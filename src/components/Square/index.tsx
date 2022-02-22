@@ -1,23 +1,8 @@
-import { useEffect, useState } from "react";
 import { BOARD } from "../../enums";
 
 import "./index.scss";
 
-function Square({ index, shortestPathArray, blocked }: any) {
-  const [lineDirection, setLineDirection] = useState<any>(null);
-
-  useEffect(() => {
-    if (shortestPathArray.indexOf(index) > -1) {
-      const currentNode = index;
-      const currentNodeIdx = shortestPathArray.indexOf(currentNode);
-      const nextNode = shortestPathArray[currentNodeIdx + 1];
-      console.log("current node", currentNode, "index", nextNode);
-      if (nextNode !== undefined) {
-        setLineDirection([currentNode, nextNode]);
-      }
-    }
-  }, [index, shortestPathArray]);
-
+function Square({ index, blocked, nextNode }: any) {
   const directions = {
     up: { x: "50%", y: "0" },
     down: { x: "50%", y: "100%" },
@@ -30,7 +15,8 @@ function Square({ index, shortestPathArray, blocked }: any) {
   };
 
   const getLinePosition = (): any => {
-    const [currentSquare, targetSquare] = lineDirection;
+    const currentSquare = index;
+    const targetSquare = nextNode;
 
     return {
       "1": directions.left,
@@ -47,7 +33,7 @@ function Square({ index, shortestPathArray, blocked }: any) {
   return (
     <div className={`square ${blocked ? "square--blocked" : ""}`}>
       <span>{index}</span>
-      {lineDirection !== null && (
+      {nextNode !== null && (
         <svg className="square__line-svg">
           <line
             x1="50%"
