@@ -1,128 +1,121 @@
+import { useEffect, useState } from "react";
 import { BOARD } from "../../enums";
 import Square from "../Square";
 
 import "./index.scss";
 
+interface INode extends Array<number> {}
+
 function Board() {
-  const targetNode = 11;
+  const origin = 0;
+  const target = 11;
+  const blocked: any = [1, 5];
 
-  const nodes: any = [
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-    { neighbors: [] },
-  ];
+  const [graph, setGraph] = useState<INode[]>([]);
+  const paths: any = new Map();
+  paths.set(0, []);
+  const visitedNodes: number[] = [...blocked];
 
-  const paths: any = { 0: { path: null, weight: 0 } };
+  useEffect(() => {
+    const graph = addAdjacentNodes();
+    setGraph(graph);
+  }, []);
 
-  const blockedNodes = [6, 2];
-  const visitedNodes: number[] = [...blockedNodes];
-
-  const addNeighbors = () => {
-    nodes.forEach((node: any, index: number) => {
-      const rightNode = index + 1;
-      const leftNode = index - 1;
-      const bottomNode = index + BOARD.WITH;
-      const upperNode = index - BOARD.WITH;
-
-      const upperRightNode = upperNode + 1;
-      const upperLeftNode = upperNode - 1;
-      const bottomRightNode = bottomNode + 1;
-      const bottomLeftNode = bottomNode - 1;
-
-      const atRight = (index + 1) % BOARD.WITH === 0;
-      const atTop = index < BOARD.WITH;
-      const atLeftSide = index % BOARD.WITH === 0;
-      const atBottom = index + BOARD.WITH >= BOARD.NODES_COUNT;
-
-      if (rightNode % BOARD.WITH !== 0) {
-        node.neighbors.push(rightNode);
-      }
-      if (!atLeftSide) {
-        node.neighbors.push(leftNode);
-      }
-      if (!atBottom) {
-        node.neighbors.push(bottomNode);
-      }
-      if (!atTop) {
-        node.neighbors.push(upperNode);
-      }
-      if (!atLeftSide && !atTop) {
-        node.neighbors.push(upperLeftNode);
-      }
-      if (!atTop && !atRight) {
-        node.neighbors.push(upperRightNode);
-      }
-      if (!atLeftSide && !atBottom) {
-        node.neighbors.push(bottomLeftNode);
-      }
-      if (!atRight && !atBottom) {
-        node.neighbors.push(bottomRightNode);
-      }
-    });
-  };
-
-  const calculateShortestPath = () => {
-    nodes.forEach((node: any, currentNodeIndex: any) => {
-      if (visitedNodes.indexOf(currentNodeIndex) > -1) {
-        return;
-      }
-      visitedNodes.push(currentNodeIndex);
-
-      node.neighbors.forEach((neighbor: any) => {
-        if (paths[neighbor] === undefined) {
-          paths[neighbor] = { weight: 1, path: currentNodeIndex };
+  useEffect(() => {
+    let currentNode: number = origin;
+    if (graph.length > 0) {
+      let counter = 0;
+      while (counter < 8) {
+        let neighborNodes = graph[currentNode];
+        for (let neighborNode of neighborNodes) {
+          if (paths.get(neighborNode) === undefined) {
+            paths.set(neighborNode, [currentNode]);
+            // } else {
+            //   const a = paths.get(neighborNode);
+            //   const newPath = [paths.get(currentNode), currentNode];
+            //   if (a.length > newPath.length) {
+            //     paths.set(neighborNode, [currentNode]);
+            //   }
+          }
         }
+        visitedNodes.push(currentNode);
+
+        let unvisitedPaths = new Map(paths);
+
+        visitedNodes.forEach((node: any) => {
+          unvisitedPaths.delete(node);
+        });
+
+        let sortedUnvisitedPaths = new Map(
+          [...unvisitedPaths].sort((a: any, b: any) => {
+            return a[1].length - b[1].length;
+          })
+        );
+
+        currentNode = sortedUnvisitedPaths.entries().next().value[0];
+        counter++;
+      }
+
+      console.log(paths);
+    }
+  }, [graph]);
+
+  const addAdjacentNodes = () => {
+    return Array(BOARD.NODES_COUNT)
+      .fill([])
+      .map((node: any, index: number) => {
+        const adjacentArray = [];
+        const rightNode = index + 1;
+        const leftNode = index - 1;
+        const bottomNode = index + BOARD.WITH;
+        const upperNode = index - BOARD.WITH;
+        const upperRightNode = upperNode + 1;
+        const upperLeftNode = upperNode - 1;
+        const bottomRightNode = bottomNode + 1;
+        const bottomLeftNode = bottomNode - 1;
+        const atRight = (index + 1) % BOARD.WITH === 0;
+        const atTop = index < BOARD.WITH;
+        const atLeftSide = index % BOARD.WITH === 0;
+        const atBottom = index + BOARD.WITH >= BOARD.NODES_COUNT;
+
+        if (rightNode % BOARD.WITH !== 0) {
+          adjacentArray.push(rightNode);
+        }
+        if (!atLeftSide) {
+          adjacentArray.push(leftNode);
+        }
+        if (!atBottom) {
+          adjacentArray.push(bottomNode);
+        }
+        if (!atTop) {
+          adjacentArray.push(upperNode);
+        }
+        if (!atLeftSide && !atTop) {
+          adjacentArray.push(upperLeftNode);
+        }
+        if (!atTop && !atRight) {
+          adjacentArray.push(upperRightNode);
+        }
+        if (!atLeftSide && !atBottom) {
+          adjacentArray.push(bottomLeftNode);
+        }
+        if (!atRight && !atBottom) {
+          adjacentArray.push(bottomRightNode);
+        }
+        return adjacentArray;
       });
-    });
   };
-
-  addNeighbors();
-  calculateShortestPath();
-
-  const shortestPathArray: any = [];
-  let nextNode = paths[targetNode].path;
-
-  let counter = 0;
-  while (nextNode !== null && counter < 999) {
-    shortestPathArray.unshift(nextNode);
-    nextNode = paths[nextNode].path;
-    console.log(nextNode);
-    counter++;
-  }
-
-  if (nextNode === null) shortestPathArray.push(targetNode);
 
   return (
     <div className="board">
-      {nodes.map((_node: any, index: any) => {
-        let nextNode = null;
-        if (shortestPathArray.indexOf(index) > -1) {
-          const currentNode = index;
-          const currentNodeIdx = shortestPathArray.indexOf(currentNode);
-          const nextNodeTemp = shortestPathArray[currentNodeIdx + 1];
-          console.log("current node", currentNode, "index", nextNode);
-          if (nextNodeTemp !== undefined) {
-            nextNode = nextNodeTemp;
-          }
-        }
-        return (
-          <Square
-            index={index}
-            key={index}
-            nextNode={nextNode}
-            blocked={blockedNodes.indexOf(index) > -1}
-          />
-        );
-      })}
+      {graph.map((_node: any, index: number) => (
+        <Square
+          currentSquare={index}
+          key={index}
+          nextNode={null}
+          blocked={false}
+        />
+      ))}
     </div>
   );
 }
