@@ -111,26 +111,32 @@ function Board() {
   };
 
   return (
-    <div className="board">
-      {graph.map((_node: any, index: number) => {
-        let nextNode = null;
-        if (lineDirection?.includes(index)) {
-          const tempIndex = lineDirection.indexOf(index);
-          if (lineDirection[tempIndex + 1] !== undefined) {
-            nextNode = lineDirection[tempIndex + 1];
+    <div>
+      <div className="info">
+        <p>Dijkstra's Algorithm</p>
+        <p>Click any square to deactivate</p>
+      </div>
+      <div className="board">
+        {graph.map((_node: any, index: number) => {
+          let nextNode = null;
+          if (lineDirection?.includes(index)) {
+            const tempIndex = lineDirection.indexOf(index);
+            if (lineDirection[tempIndex + 1] !== undefined) {
+              nextNode = lineDirection[tempIndex + 1];
+            }
           }
-        }
 
-        return (
-          <Square
-            currentSquare={index}
-            key={index}
-            nextNode={nextNode}
-            blocked={blocked.includes(index)}
-            onClick={handleToggleBlock}
-          />
-        );
-      })}
+          return (
+            <Square
+              currentSquare={index}
+              key={index}
+              nextNode={nextNode}
+              blocked={blocked.includes(index)}
+              onClick={handleToggleBlock}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }
