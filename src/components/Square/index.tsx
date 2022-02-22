@@ -2,7 +2,7 @@ import { BOARD } from "../../enums";
 
 import "./index.scss";
 
-function Square({ currentSquare, blocked, nextNode }: any) {
+function Square({ currentSquare, blocked, nextNode, onClick }: any) {
   const directions = {
     up: { x: "50%", y: "0" },
     down: { x: "50%", y: "100%" },
@@ -30,7 +30,10 @@ function Square({ currentSquare, blocked, nextNode }: any) {
   };
 
   return (
-    <div className={`square ${blocked ? "square--blocked" : ""}`}>
+    <div
+      className={`square ${blocked ? "square--blocked" : ""}`}
+      onClick={e => onClick(currentSquare)}
+    >
       <span>{currentSquare}</span>
       {nextNode !== null && (
         <svg className="square__line-svg">

@@ -9,9 +9,10 @@ interface INode extends Array<number> {}
 function Board() {
   const origin = 0;
   const target = 11;
-  const blocked: any = [1, 5];
 
   const [graph, setGraph] = useState<INode[]>([]);
+  const [blocked, setBlocked] = useState<number[]>([]);
+
   const paths: any = new Map();
   paths.set(0, []);
   const visitedNodes: number[] = [...blocked];
@@ -52,13 +53,14 @@ function Board() {
           })
         );
 
+        if (sortedUnvisitedPaths.entries().next().value === undefined) break;
         currentNode = sortedUnvisitedPaths.entries().next().value[0];
         counter++;
       }
 
       console.log(paths);
     }
-  }, [graph]);
+  }, [graph, blocked]);
 
   const addAdjacentNodes = () => {
     return Array(BOARD.NODES_COUNT)
@@ -106,6 +108,16 @@ function Board() {
       });
   };
 
+  const handleToggleBlock = (nodeIndex: number) => {
+    if (!blocked.includes(nodeIndex)) {
+      setBlocked(prevState => [...prevState, nodeIndex]);
+    } else {
+      setBlocked(prevState => [
+        ...prevState.filter(item => item !== nodeIndex),
+      ]);
+    }
+  };
+
   return (
     <div className="board">
       {graph.map((_node: any, index: number) => (
@@ -113,7 +125,8 @@ function Board() {
           currentSquare={index}
           key={index}
           nextNode={null}
-          blocked={false}
+          blocked={blocked.includes(index)}
+          onClick={handleToggleBlock}
         />
       ))}
     </div>
