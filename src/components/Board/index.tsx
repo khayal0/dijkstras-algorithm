@@ -9,13 +9,9 @@ interface INode extends Array<number> {}
 function Board() {
   const origin = 0;
   const target = 11;
-
   const [graph, setGraph] = useState<INode[]>([]);
   const [blocked, setBlocked] = useState<number[]>([]);
-
-  const paths: any = new Map();
-  paths.set(0, []);
-  const visitedNodes: number[] = [...blocked];
+  const [lineDirection, setLineDirection] = useState<any>(null);
 
   useEffect(() => {
     const graph = addAdjacentNodes();
@@ -23,20 +19,18 @@ function Board() {
   }, []);
 
   useEffect(() => {
+    const visitedNodes: number[] = [...blocked];
+    const paths: any = new Map();
+    paths.set(0, [0]);
+
     let currentNode: number = origin;
     if (graph.length > 0) {
-      let counter = 0;
-      while (counter < 8) {
+      while (true) {
         let neighborNodes = graph[currentNode];
         for (let neighborNode of neighborNodes) {
           if (paths.get(neighborNode) === undefined) {
-            paths.set(neighborNode, [currentNode]);
-            // } else {
-            //   const a = paths.get(neighborNode);
-            //   const newPath = [paths.get(currentNode), currentNode];
-            //   if (a.length > newPath.length) {
-            //     paths.set(neighborNode, [currentNode]);
-            //   }
+            const previousPath = paths.get(currentNode);
+            paths.set(neighborNode, [...previousPath, neighborNode]);
           }
         }
         visitedNodes.push(currentNode);
@@ -55,11 +49,9 @@ function Board() {
 
         if (sortedUnvisitedPaths.entries().next().value === undefined) break;
         currentNode = sortedUnvisitedPaths.entries().next().value[0];
-        counter++;
       }
-
-      console.log(paths);
     }
+    setLineDirection(paths.get(target));
   }, [graph, blocked]);
 
   const addAdjacentNodes = () => {
@@ -120,15 +112,25 @@ function Board() {
 
   return (
     <div className="board">
-      {graph.map((_node: any, index: number) => (
-        <Square
-          currentSquare={index}
-          key={index}
-          nextNode={null}
-          blocked={blocked.includes(index)}
-          onClick={handleToggleBlock}
-        />
-      ))}
+      {graph.map((_node: any, index: number) => {
+        let nextNode = null;
+        if (lineDirection?.includes(index)) {
+          const tempIndex = lineDirection.indexOf(index);
+          if (lineDirection[tempIndex + 1] !== undefined) {
+            nextNode = lineDirection[tempIndex + 1];
+          }
+        }
+
+        return (
+          <Square
+            currentSquare={index}
+            key={index}
+            nextNode={nextNode}
+            blocked={blocked.includes(index)}
+            onClick={handleToggleBlock}
+          />
+        );
+      })}
     </div>
   );
 }

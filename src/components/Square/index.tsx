@@ -16,7 +16,7 @@ function Square({ currentSquare, blocked, nextNode, onClick }: any) {
 
   const getLinePosition = (): any => {
     const targetSquare = nextNode;
-
+    console.log(targetSquare);
     return {
       "1": directions.left,
       "-1": directions.right,
