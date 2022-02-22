@@ -2,7 +2,7 @@ import { BOARD } from "../../enums";
 
 import "./index.scss";
 
-function Square({ index }: any) {
+function Square({ index, _node }: any) {
   const lineDirection = { x: 100, y: 50 };
 
   const directions = {

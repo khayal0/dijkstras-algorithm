@@ -5,8 +5,10 @@ import Square from "../Square";
 import "./index.scss";
 
 function Board() {
-  // const initialPaths = useMemo(() => new Array(15).fill(null), []);
+  // const initialPaths = useMemo(() => new Array(BOARD.).fill(null), []);
   // const [paths, setPaths] = useState([0, ...initialPaths]);
+
+  const targetNode = BOARD.NODES_COUNT - 1;
 
   const nodes: any = [
     { neighbors: [] },
@@ -25,7 +27,7 @@ function Board() {
 
   const paths: any = { 0: { pathFrom: null, weight: 0 } };
 
-  const visitedNodes: any = [6];
+  const visitedNodes: any = [];
 
   const addNeighbors = () => {
     nodes.forEach((node: any, index: number) => {
@@ -39,33 +41,33 @@ function Board() {
       const bottomRightNode = bottomNode + 1;
       const bottomLeftNode = bottomNode - 1;
 
-      const isOnRight = (index + 1) % BOARD.WITH === 0;
-      const isOnTop = index < BOARD.WITH;
-      const isOnLeftSide = index % BOARD.WITH === 0;
-      const isOnBottom = index >= BOARD.NODES_COUNT - BOARD.WITH;
+      const atRight = (index + 1) % BOARD.WITH === 0;
+      const atTop = index < BOARD.WITH;
+      const atLeftSide = index % BOARD.WITH === 0;
+      const atBottom = index + BOARD.WITH >= BOARD.NODES_COUNT;
 
       if (rightNode % BOARD.WITH !== 0) {
         node.neighbors.push(rightNode);
       }
-      if (!isOnLeftSide) {
+      if (!atLeftSide) {
         node.neighbors.push(leftNode);
       }
-      if (!isOnBottom) {
+      if (!atBottom) {
         node.neighbors.push(bottomNode);
       }
-      if (!isOnTop) {
+      if (!atTop) {
         node.neighbors.push(upperNode);
       }
-      if (!isOnLeftSide && !isOnTop) {
+      if (!atLeftSide && !atTop) {
         node.neighbors.push(upperLeftNode);
       }
-      if (index >= BOARD.WITH) {
+      if (!atTop && !atRight) {
         node.neighbors.push(upperRightNode);
       }
-      if (!isOnLeftSide && !isOnBottom) {
+      if (!atLeftSide && !atBottom) {
         node.neighbors.push(bottomLeftNode);
       }
-      if (!isOnRight && !isOnBottom) {
+      if (!atRight && !atBottom) {
         node.neighbors.push(bottomRightNode);
       }
     });
@@ -95,8 +97,8 @@ function Board() {
 
   return (
     <div className="board">
-      {nodes.map((_node: any, index: any) => (
-        <Square index={index} key={index} />
+      {nodes.map((node: any, index: any) => (
+        <Square index={index} key={index} node={node} />
       ))}
     </div>
   );
