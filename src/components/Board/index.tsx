@@ -1,16 +1,24 @@
-// import { useMemo, useState } from "react";
 import { BOARD } from "../../enums";
 import Square from "../Square";
 
 import "./index.scss";
 
 function Board() {
-  // const initialPaths = useMemo(() => new Array(BOARD.).fill(null), []);
-  // const [paths, setPaths] = useState([0, ...initialPaths]);
-
   const targetNode = BOARD.NODES_COUNT - 1;
 
   const nodes: any = [
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
+    { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
     { neighbors: [] },
@@ -92,25 +100,14 @@ function Board() {
   calculateShortestPath();
 
   const shortestPathArray: any = [];
-
   let nextNode = paths[targetNode].path;
-  shortestPathArray.unshift(nextNode);
-  nextNode = paths[nextNode].path;
 
-  shortestPathArray.unshift(nextNode);
-  nextNode = paths[nextNode].path;
-
-  shortestPathArray.unshift(nextNode);
-  nextNode = paths[nextNode].path;
+  while (nextNode !== null) {
+    shortestPathArray.unshift(nextNode);
+    nextNode = paths[nextNode].path;
+  }
 
   if (nextNode === null) shortestPathArray.push(targetNode);
-  console.log(nextNode);
-
-  console.log(" shortestPathArray ", shortestPathArray);
-
-  console.log("== ALL NODES ==>", nodes);
-  console.log("== ALL PATHS ==>", paths);
-  console.log("== VISITED NODES ==>", visitedNodes);
 
   return (
     <div className="board">

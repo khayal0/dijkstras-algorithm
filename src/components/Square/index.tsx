@@ -29,8 +29,6 @@ function Square({ index, shortestPathArray }: any) {
     bottomRight: { x: "100%", y: "100%" },
   };
 
-  console.log(lineDirection);
-
   const getLinePosition = (): any => {
     const [currentSquare, targetSquare] = lineDirection;
 
